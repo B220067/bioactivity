@@ -118,3 +118,20 @@ plt.xlabel("Recall")
 plt.ylabel("Precision")
 plt.grid()
 plt.show()
+
+## Extract predicted high bioactivity compounds
+# Filter X_test for predicted actives using indices
+predicted_active_indices = y_pred_tuned == 1
+predicted_active = X_test[predicted_active_indices].copy()
+
+# Add relevant identifiers from the original dataset
+predicted_active["molecule_chembl_id"] = df.iloc[X_test.index[predicted_active_indices]]["molecule_chembl_id"].values
+predicted_active["canonical_smiles"] = df.iloc[X_test.index[predicted_active_indices]]["canonical_smiles"].values
+predicted_active["log_standard_value"] = df.iloc[X_test.index[predicted_active_indices]]["log_standard_value"].values
+
+# Save the results
+predicted_active.to_csv("predicted_active_compounds.csv", index=False)
+
+print("\nPredicted Active Compounds (High Bioactivity):")
+print(predicted_active[["molecule_chembl_id", "canonical_smiles", "log_standard_value"]])
+
